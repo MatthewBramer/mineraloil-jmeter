@@ -4,6 +4,7 @@ import com.lithium.mineraloil.jmeter.reports.JTLReport;
 import com.lithium.mineraloil.jmeter.reports.SummaryReport;
 import com.lithium.mineraloil.jmeter.test_elements.JMeterStep;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.control.gui.TestPlanGui;
 import org.apache.jmeter.engine.StandardJMeterEngine;
@@ -16,8 +17,6 @@ import org.apache.jmeter.testelement.TestPlan;
 import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
 import org.apache.jorphan.collections.ListedHashTree;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,8 +24,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 
+@Slf4j
 public class JMeterRunner extends Observable {
-    protected final Logger logger = LoggerFactory.getLogger(JMeterRunner.class);
     @Getter
     private final String testPlanName;
     @Getter
@@ -53,7 +52,7 @@ public class JMeterRunner extends Observable {
     }
 
     private void createTestPlan() {
-        logger.info("Creating test plan:" + testPlanName);
+        log.info("Creating test plan:" + testPlanName);
 
         testPlan = getTestPlan();
         testPlanTree.add(testPlan);
@@ -93,7 +92,7 @@ public class JMeterRunner extends Observable {
 
     // recursively create the child nodes
     private void addChildTestElements(HashTree hashTree, JMeterStep currentStep) {
-        logger.info(String.format("Adding child steps for %s", currentStep.getTestElement().getName()));
+        log.info(String.format("Adding child steps for %s", currentStep.getTestElement().getName()));
         for (JMeterStep childStep : currentStep.getSteps()) {
             childStep.setOutputFilePath(String.format("%s/%s-", JMeterRunner.getOutputDirectory(), testPlanFileName));
             HashTree childHashTree = hashTree.add((Object) childStep.getTestElement());
