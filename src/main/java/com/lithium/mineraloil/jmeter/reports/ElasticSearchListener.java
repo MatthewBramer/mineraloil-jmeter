@@ -123,8 +123,9 @@ public class ElasticSearchListener extends AbstractBackendListenerClient {
         map.put("ErrorCount", result.getErrorCount());
         map.put("StartTime", result.getStartTime());
         map.put("EndTime", result.getEndTime());
-        map.put("release", JMeterUtils.getPropDefault("release","Unknown"));
+        map.put("release", JMeterUtils.getPropDefault("release", "Unknown"));
         map.put("revision", JMeterUtils.getPropDefault("revision", "Unknown"));
+        map.put("code-branch", JMeterUtils.getPropDefault("codebranch", "Unknown"));
         map.put("community", JMeterUtils.getPropDefault("community", "Unknown"));
 
 

@@ -42,16 +42,17 @@ public class CreateOrUpdateESMapping {
         GetIndexTemplatesResponse response = client.admin().indices().prepareGetTemplates().get();
         Boolean templateExist = false;
 
-        for (IndexTemplateMetaData templateMetaData : response.getIndexTemplates()) {
+/*        for (IndexTemplateMetaData templateMetaData : response.getIndexTemplates()) {
             if (templateMetaData.getName().equalsIgnoreCase(JMETER_TEMPLATE_V1)) {
                 templateExist = true;
-                return true;
+               // return true;
             }
-        }
+        } */
         PutIndexTemplateResponse putIndexTemplateResponse = null;
         if (!templateExist) {
             try {
                 putIndexTemplateResponse = client.admin().indices().preparePutTemplate(JMETER_TEMPLATE_V1).setTemplate("jmeter_v1*").setOrder(0).addMapping("SampleResult", FileUtils.readFileToString(mapping).trim()).get();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

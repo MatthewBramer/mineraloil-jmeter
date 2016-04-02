@@ -105,6 +105,9 @@
     "revision": {
       "type": "string"
     },
+    "code-branch": {
+      "type": "string"
+    },
     "device": {
       "type": "string"
     },
