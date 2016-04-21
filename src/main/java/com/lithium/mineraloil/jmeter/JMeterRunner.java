@@ -232,27 +232,9 @@ public class JMeterRunner extends Observable {
         addSummaryReport();
         jmeter.configure(testPlanTree);
         createJMX();
-        updateObserversStart();
         jmeter.run();
-        updateObserversStop();
         createReportableJtl();
         jmeter.exit();
-    }
-
-    private void updateObserversStart() {
-        setChanged();
-        JMeterUpdate update = new JMeterUpdate();
-        update.setTestPlanName(testPlanName);
-        update.setState(JMeterStatus.STARTED);
-        notifyObservers(update);
-    }
-
-    private void updateObserversStop() {
-        setChanged();
-        JMeterUpdate update = new JMeterUpdate();
-        update.setTestPlanName(testPlanName);
-        update.setState(JMeterStatus.STOPPED);
-        notifyObservers(update);
     }
 
 }
