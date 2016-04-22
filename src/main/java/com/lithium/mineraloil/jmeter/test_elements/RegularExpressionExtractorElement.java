@@ -17,7 +17,7 @@ public class RegularExpressionExtractorElement extends JMeterStepImpl<RegularExp
     private String matchNumber;
     private String defaultValue;
 
-    public TestElement getTestElement() {
+    public RegexExtractor getTestElement() {
         Preconditions.checkNotNull(name);
         RegexExtractor regexExtractor = new RegexExtractor();
         regexExtractor.setProperty(TestElement.GUI_CLASS, RegexExtractorGui.class.getName().toString());
