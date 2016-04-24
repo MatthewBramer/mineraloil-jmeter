@@ -59,7 +59,7 @@ public class LiaPerfTestWithLogins {
             properties.put("codeBranch", code_branch);
         }
 
-        JMeterRunner jmeter = new JMeterRunner("httpRequest-warmpup");
+        JMeterRunner jmeter = new JMeterRunner("httpRequest-perftest");
         jmeter.addExtraJmeterProperties(properties);
 
         /* Create header element */
