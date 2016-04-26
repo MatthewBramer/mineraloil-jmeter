@@ -87,6 +87,8 @@ public class JMeterRunner extends Observable {
         testPlan.setProperty(TestElement.TEST_CLASS, TestPlan.class.getName());
         testPlan.setProperty(TestElement.GUI_CLASS, TestPlanGui.class.getName());
         testPlan.setProperty(TestElement.ENABLED, true);
+        testPlan.setProperty("CookieManager.check.cookies",false);
+
         testPlan.setFunctionalMode(false);
         testPlan.setSerialized(true);
         Arguments arguments = new Arguments();

@@ -23,6 +23,7 @@ public class HttpCookieManagerElement extends JMeterStepImpl<HttpCookieManagerEl
         Preconditions.checkNotNull(name);
         CookieManager cookieManager = new CookieManager();
         cookieManager.setName(name);
+
         return cookieManager;
 
     }
