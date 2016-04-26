@@ -2,6 +2,7 @@ package com.lithium.liatests;
 
 import com.lithium.mineraloil.jmeter.JMeterRunner;
 import com.lithium.mineraloil.jmeter.test_elements.*;
+import org.apache.jmeter.protocol.http.control.CookieManager;
 import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
 import org.apache.jmeter.protocol.http.sampler.HTTPSamplerProxy;
@@ -33,6 +34,7 @@ public abstract class AbstractPerfTestWithLogins {
         int elasticSearchPort = Integer.parseInt(System.getProperty("elasticSearchPort"));
         String testRun = System.getProperty("testRun");
         String release = System.getProperty("release");
+        String release = System.getProperty("release");
         String revision = System.getProperty("revision");
         String community = System.getProperty("community");
 
@@ -57,9 +59,10 @@ public abstract class AbstractPerfTestWithLogins {
 
         /* Http cookie manager at global level for thread group*/
 
-        HttpCacheManagerElement httpCookieManagerElement = HttpCacheManagerElement.builder().name("httpCookieManager_global").build();
-        httpCookieManagerElement.getTestElement().setUseExpires(true);
-
+        HttpCookieManagerElement httpCookieManagerElement = HttpCookieManagerElement.builder().name("httpCookieManager_global").build();
+        httpCookieManagerElement.getTestElement().setImplementation(CookieManager.DEFAULT_IMPLEMENTATION);
+        httpCookieManagerElement.getTestElement().setProperty("CookieManager.check.cookies",false);
+        jmeter.cookieManager=httpCookieManagerElement.getTestElement();
         jmeter.getTestPlan().setProperty("CookieManager.check.cookies",false);
 
         /* Create header element */
@@ -232,7 +235,7 @@ public abstract class AbstractPerfTestWithLogins {
                 .name("Show Active Users Test").build();
         CSVDataSetElement csvDataSetElement = CSVDataSetElement.builder().
                 fileName(csvFile).
-                delimiter("\\t").variableNames("method,url,user_agent,user_id,loginname").name("allurls").quotedData(false).stopThread(true).shareMode("shareMode.all")
+                delimiter("\\t").variableNames("method,url,user_agent,user_id,loginname").name("allurls").quotedData(false).stopThread(false).shareMode("shareMode.all")
                 .recycle(true).build();
 
         threadGroup.addStep(httpCookieManagerElement);
