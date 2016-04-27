@@ -79,8 +79,8 @@ public abstract class AbstractPerfTestWithLogins {
         IfControllerElement ifControllerUserNotLoggedInBefore = IfControllerElement.builder().name("checkIfUserNotLoggedInBefore").condition("\"${COOKIE_LithiumUserInfo}\"==\"\\${COOKIE_LithiumUserInfo}\"").build();
         IfControllerElement ifControllerUserLoggedAndNeedToLogout = IfControllerElement.builder().name("checkIfUserLoggedAndNeedToLogout").condition("\"${COOKIE_LithiumUserInfo}\"!=\"\\${COOKIE_LithiumUserInfo}\" && \"${COOKIE_LithiumUserInfo}\".length>0").build();
 
-        TestActionElement moveOnToNextIteration = TestActionElement.builder().name("MoveOnToNextIteration").build();
-        moveOnToNextIteration.getTestElement().setTarget(TestAction.RESTART_NEXT_LOOP);
+        //TestActionElement moveOnToNextIteration = TestActionElement.builder().name("MoveOnToNextIteration").build();
+       // moveOnToNextIteration.getTestElement().setTarget(TestAction.RESTART_NEXT_LOOP);
 
 
 
@@ -106,10 +106,10 @@ public abstract class AbstractPerfTestWithLogins {
                 .build();
 
         ifControllerUserNotLoggedInBefore.addReportableStep(anoynoumUserRequest);
-        ifControllerUserNotLoggedInBefore.addStep(moveOnToNextIteration);
+        //ifControllerUserNotLoggedInBefore.addStep(moveOnToNextIteration);
 
         ifControllerUserLoggedAndNeedToLogout.addReportableStep(logout);
-        ifControllerUserLoggedAndNeedToLogout.addStep(moveOnToNextIteration);
+        //ifControllerUserLoggedAndNeedToLogout.addStep(moveOnToNextIteration);
 
         ifControllerAnonymousUser.addStep(ifControllerUserNotLoggedInBefore);
         ifControllerAnonymousUser.addStep(ifControllerUserLoggedAndNeedToLogout);
@@ -213,7 +213,7 @@ public abstract class AbstractPerfTestWithLogins {
         ifControllerAnonToUser.addReportableStep(loadLoginPage);
         ifControllerAnonToUser.addReportableStep(login_user);
         ifControllerAnonToUser.addReportableStep(simplyGetUrlCall);
-        ifControllerAnonToUser.addStep(moveOnToNextIteration);
+        //ifControllerAnonToUser.addStep(moveOnToNextIteration);
 
 
 /* This is for one user to another user.Under actual user condition add one to another user condition and then add loginpage get call, login user and then make normal ${url} call */
@@ -228,7 +228,7 @@ public abstract class AbstractPerfTestWithLogins {
         ifControllerOneToAnotherUser.addReportableStep(logout);
         ifControllerOneToAnotherUser.addReportableStep(login_user);
         ifControllerOneToAnotherUser.addReportableStep(simplyGetUrlCall);
-        ifControllerOneToAnotherUser.addStep(moveOnToNextIteration);
+        //ifControllerOneToAnotherUser.addStep(moveOnToNextIteration);
 
         ThreadGroupElement threadGroup = ThreadGroupElement.builder().threadCount(threads).rampUp(rampup)
                 .continueForever(true).setScheduler(true).duration(Integer.parseInt(System.getProperty("duration", "10")))
