@@ -4,6 +4,7 @@ import com.lithium.mineraloil.jmeter.reports.JTLReport;
 import com.lithium.mineraloil.jmeter.reports.SummaryReport;
 import com.lithium.mineraloil.jmeter.test_elements.JMeterStep;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.control.gui.TestPlanGui;
@@ -31,7 +32,8 @@ public class JMeterRunner extends Observable {
     @Getter
     private final String testPlanFileName;
     public CookieManager cookieManager;
-    protected String jmeterBinDir;
+    @Setter
+    protected String jmeterResourceDir;
     protected File jmeterProperties;
     protected StandardJMeterEngine jmeter;
     protected ListedHashTree testPlanTree;
@@ -40,9 +42,13 @@ public class JMeterRunner extends Observable {
     private ArrayList<JMeterStep> steps;
 
     public JMeterRunner(String testPlanName) {
+        this(testPlanName, JMeterRunner.class.getClassLoader().getResource("jmeter").getPath());
+    }
+
+    public JMeterRunner(String testPlanName, String jmeterResourceDir) {
+        this.jmeterResourceDir = jmeterResourceDir;
         jmeter = new StandardJMeterEngine();
-        jmeterBinDir = JMeterRunner.class.getClassLoader().getResource("jmeter").getPath();
-        JMeterUtils.setJMeterHome(jmeterBinDir.toString());
+        JMeterUtils.setJMeterHome(jmeterResourceDir);
         readProperties();
         JMeterUtils.initLocale();
         testPlanTree = new ListedHashTree();
@@ -161,7 +167,7 @@ public class JMeterRunner extends Observable {
     }
 
     private void readProperties() {
-        jmeterProperties = new File(jmeterBinDir + "/bin/jmeter.properties");
+        jmeterProperties = new File(jmeterResourceDir + "/bin/jmeter.properties");
         if (!jmeterProperties.exists()) {
             throw new RuntimeException("Unable to locate file: " + jmeterProperties.getAbsolutePath());
         }
@@ -225,7 +231,7 @@ public class JMeterRunner extends Observable {
         return ssc;
     }
 
-    public void run() {
+    public JMeterRunner run() {
         getCookieManager();
         addTestSteps();
         addJTLResultsCollector();
@@ -237,6 +243,7 @@ public class JMeterRunner extends Observable {
         updateObserversStop();
         createReportableJtl();
         jmeter.exit();
+        return this;
     }
 
     private void updateObserversStart() {

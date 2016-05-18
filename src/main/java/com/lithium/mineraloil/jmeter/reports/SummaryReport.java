@@ -30,13 +30,22 @@ public class SummaryReport {
         return !isErrorSeen() && !isFailureSeen();
     }
 
+    public boolean isSuccessfulWithReturnCode(int returnCode) {
+        return !isErrorSeen() && !isFailureSeen() && isReturnCode(returnCode);
+    }
+
     public boolean isFailureSeen() {
         return testResult.getHttpSamples().stream().anyMatch(row -> row.getAssertionResult() != null && row.getAssertionResult().getFailure() == true);
     }
 
     public boolean isErrorSeen() {
-        return testResult.getHttpSamples().stream().anyMatch(row -> row.getAssertionResult() != null && row.getAssertionResult().getError() == true);
+        return testResult.getHttpSamples().stream().anyMatch(row -> row.getAssertionResult() != null && (row.getAssertionResult().getError() == true || row.getEc() == 1));
     }
+
+    public boolean isReturnCode(int returnCode) {
+        return testResult.getHttpSamples().stream().allMatch(row -> row.getRc().equals(String.valueOf(returnCode)));
+    }
+
 
     public void showOutputInLog() {
         for (HTTPSample httpSample : testResult.getHttpSamples()) {

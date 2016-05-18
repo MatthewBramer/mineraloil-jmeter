@@ -25,6 +25,7 @@ public class HTTPSamplerElement extends JMeterStepImpl<HTTPSamplerElement> {
     private Integer responseTimeout;
     private Boolean followRedirects;
     private String protocol;
+    private Boolean postBodyRaw;
     private String contentEncoding;
     private Boolean autoRedirects;
     private Boolean useKeepAlive;
@@ -32,6 +33,7 @@ public class HTTPSamplerElement extends JMeterStepImpl<HTTPSamplerElement> {
     private Boolean monitor;
     private String embeddedUrlRE;
     private String implementation;
+    private Object body;
 
     public TestElement getTestElement() {
         Preconditions.checkNotNull(domain);
@@ -47,6 +49,7 @@ public class HTTPSamplerElement extends JMeterStepImpl<HTTPSamplerElement> {
         httpSampler.setPort(port);
         httpSampler.setPath(path);
         httpSampler.setMethod(getOptionalValue(method, "GET"));
+        httpSampler.setPostBodyRaw(getOptionalValue(postBodyRaw, false));
 
         // optional parameters
         httpSampler.setImplementation(getOptionalValue(implementation, "HttpClient4"));
@@ -84,14 +87,25 @@ public class HTTPSamplerElement extends JMeterStepImpl<HTTPSamplerElement> {
         return addArgument(name, String.valueOf(value));
     }
 
+    public HTTPSamplerElement addBody(String name, Object value) {
+        this.body = value;
+        return addArgument(name, String.valueOf(value), false);
+    }
+
     public HTTPSamplerElement addArgument(String name, String value) {
+        return addArgument(name, value, true);
+    }
+
+    public HTTPSamplerElement addArgument(String name, String value, boolean encode) {
         if (arguments == null) arguments = new ArrayList<>();
         HTTPArgument argument = (HTTPArgument) HTTPArgumentElement.builder()
                                                                   .name(name)
                                                                   .value(value)
+                                                                  .setAlwaysEncoded(encode)
                                                                   .build()
                                                                   .getTestElement();
         arguments.add(argument);
         return this;
     }
+
 }
