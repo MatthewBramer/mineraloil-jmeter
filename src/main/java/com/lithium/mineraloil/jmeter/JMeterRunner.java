@@ -181,6 +181,13 @@ public class JMeterRunner extends Observable {
         return dir;
     }
 
+    public void cleanOutputDirectory() {
+        File outputDirectory = new File(getOutputDirectory());
+        for (File file : outputDirectory.listFiles()) {
+            file.delete();
+        }
+    }
+
     public CookieManager getCookieManager() {
         if (cookieManager == null) {
             cookieManager = new CookieManager();

@@ -47,6 +47,7 @@ public class ApacheSignedHeaderElements {
             e.init(secretKey);
             e.update(fingerprint.getBytes(Charsets.UTF_8));
             String hash = Base64.encodeBase64String(e.doFinal());
+            log.info(String.format("Generated Signature for fingerprint '%s' secret '%s': %s", fingerprint, secret, hash));
             return hash;
         } catch (InvalidKeyException | NoSuchAlgorithmException var5) {
             throw Throwables.propagate(var5);
