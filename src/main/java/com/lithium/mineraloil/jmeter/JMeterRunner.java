@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 @Slf4j
@@ -239,6 +240,7 @@ public class JMeterRunner extends Observable {
     }
 
     public JMeterRunner run() {
+        cleanupFiles();
         getCookieManager();
         addTestSteps();
         addJTLResultsCollector();
@@ -251,6 +253,14 @@ public class JMeterRunner extends Observable {
         createReportableJtl();
         jmeter.exit();
         return this;
+    }
+
+    private void cleanupFiles() {
+        List<File> files = new ArrayList<>();
+        files.add(new File(getFileName("jtl")));
+        files.add(new File(getFileName("reportable", "jtl")));
+        files.add(new File(getFileName("summary", "xml")));
+        for (File file : files) file.delete();
     }
 
     private void updateObserversStart() {
