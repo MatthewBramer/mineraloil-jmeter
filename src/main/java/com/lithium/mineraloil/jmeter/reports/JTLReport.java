@@ -1,5 +1,6 @@
 package com.lithium.mineraloil.jmeter.reports;
 
+import com.lithium.mineraloil.jmeter.reports.models.HTTPSample;
 import com.lithium.mineraloil.jmeter.reports.models.TestResult;
 import lombok.Getter;
 
@@ -9,6 +10,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class JTLReport {
@@ -31,15 +33,16 @@ public class JTLReport {
     public void createReportableResults(String filename) {
         TestResult reportableSubset = new TestResult();
         reportableSubset.setVersion(testResult.getVersion());
-        reportableSubset.setHttpSamples(
-                testResult.getHttpSamples().stream()
-                          .filter(sample -> sample.getLb().endsWith(isReportable))
-                          .collect(Collectors.toList())
-                                       );
-        try {
-            marshaller.marshal(reportableSubset, new File(filename));
-        } catch (JAXBException e) {
-            e.printStackTrace();
+        List<HTTPSample> reportableResults = testResult.getHttpSamples().stream()
+                                             .filter(sample -> sample.getLb().endsWith(isReportable))
+                                             .collect(Collectors.toList());
+        if (reportableResults.size() > 0) {
+            reportableSubset.setHttpSamples(reportableResults);
+            try {
+                marshaller.marshal(reportableSubset, new File(filename));
+            } catch (JAXBException e) {
+                e.printStackTrace();
+            }
         }
     }
 
