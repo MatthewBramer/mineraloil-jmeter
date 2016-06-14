@@ -51,6 +51,7 @@ public class JMeterRunner extends Observable {
         jmeter = new StandardJMeterEngine();
         JMeterUtils.setJMeterHome(jmeterResourceDir);
         readProperties();
+        JMeterUtils.initLogging();
         JMeterUtils.initLocale();
         testPlanTree = new ListedHashTree();
         this.testPlanName = testPlanName;
