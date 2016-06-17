@@ -85,7 +85,7 @@ public class CSVReport {
                 new ParseLong(),
                 new ParseLong(),
                 new NotNull(),
-                new ParseInt(),
+                new org.supercsv.cellprocessor.Optional(),
                 new org.supercsv.cellprocessor.Optional(),
                 new org.supercsv.cellprocessor.Optional(),
                 new org.supercsv.cellprocessor.Optional(),

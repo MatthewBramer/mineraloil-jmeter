@@ -14,7 +14,7 @@ public class CSVHttpSample {
     public long timeStamp;
     public long elapsed;
     public String label;
-    public int responseCode;
+    public String responseCode;
     public String responseMessage;
     public String threadName;
     public String success;
