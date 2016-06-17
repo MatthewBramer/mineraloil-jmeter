@@ -1,10 +1,12 @@
 package com.lithium.mineraloil.jmeter;
 
+import com.lithium.mineraloil.jmeter.reports.CSVReport;
 import com.lithium.mineraloil.jmeter.reports.CreateOrUpdateESMapping;
 import com.lithium.mineraloil.jmeter.reports.JTLReport;
 import com.lithium.mineraloil.jmeter.reports.SummaryReport;
 import com.lithium.mineraloil.jmeter.test_elements.JMeterStep;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
 import org.apache.jmeter.JMeter;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.control.gui.TestPlanGui;
@@ -13,6 +15,9 @@ import org.apache.jmeter.engine.DistributedRunner;
 import org.apache.jmeter.engine.JMeterEngine;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.protocol.http.control.CookieManager;
+import org.apache.jmeter.report.config.ConfigurationException;
+import org.apache.jmeter.report.dashboard.GenerationException;
+import org.apache.jmeter.report.dashboard.ReportGenerator;
 import org.apache.jmeter.reporters.ResultCollector;
 import org.apache.jmeter.samplers.Remoteable;
 import org.apache.jmeter.samplers.SampleSaveConfiguration;
@@ -55,6 +60,9 @@ public class JMeterRunner extends Observable {
     protected StandardJMeterEngine jmeterRemote;
     private Properties extraProperties;
 
+    public static final String JMETER_REPORT_OUTPUT_DIR_PROPERTY =
+            "jmeter.reportgenerator.outputdir";
+
     public JMeterRunner(String testPlanName) {
         jmeter = new StandardJMeterEngine();
 
@@ -87,7 +95,7 @@ public class JMeterRunner extends Observable {
         testPlan.setProperty(TestElement.TEST_CLASS, TestPlan.class.getName());
         testPlan.setProperty(TestElement.GUI_CLASS, TestPlanGui.class.getName());
         testPlan.setProperty(TestElement.ENABLED, true);
-        testPlan.setProperty("CookieManager.check.cookies",false);
+        testPlan.setProperty("CookieManager.check.cookies", false);
 
         testPlan.setFunctionalMode(false);
         testPlan.setSerialized(true);
@@ -160,6 +168,7 @@ public class JMeterRunner extends Observable {
         collector.setProperty("include_checkbox_state", false);
         collector.setProperty("exclude_checkbox_state", false);
         testPlanTree.add(testPlan, collector);
+
     }
 
     // user the isReportable flag to generate a second jtl
@@ -175,9 +184,103 @@ public class JMeterRunner extends Observable {
             createReportableJtl();
     }
 
+    private void createReportableCSV() {
+        new CSVReport(getFileName("csv")).createReportableResults(getFileName("reportable", "csv"));
+    }
+
     public SummaryReport getSummaryResults() {
         if (summaryResults == null) summaryResults = new SummaryReport(getFileName("summary", "xml"));
         return summaryResults;
+    }
+
+    private ResultCollector getSamplesResultsCollector(String fileFormat) {
+
+        ResultCollector resultCollector = new ResultCollector();
+        resultCollector.setProperty(TestElement.GUI_CLASS, "org.apache.jmeter.visualizers.ViewResultsFullVisualizer");
+        resultCollector.setProperty(TestElement.TEST_CLASS, "org.apache.jmeter.reporters.ResultCollector");
+        resultCollector.setProperty(TestElement.NAME, "View Results Tree For " + fileFormat);
+        resultCollector.setProperty(TestElement.ENABLED, true);
+        resultCollector.setProperty("ResultCollector.error_logging", false);
+        SampleSaveConfiguration ssc = new SampleSaveConfiguration();
+        ssc.setTime(true);
+        ssc.setLatency(true);
+        ssc.setTimestamp(true);
+        ssc.setSuccess(true);
+        ssc.setLabel(true);
+        ssc.setCode(true);
+        ssc.setMessage(true);
+        ssc.setThreadName(true);
+        ssc.setDataType(false);
+        ssc.setEncoding(false);
+        ssc.setAssertions(true);
+        ssc.setSubresults(false);
+        ssc.setResponseData(false);
+        ssc.setSamplerData(false);
+
+        if ("xml".equals(fileFormat))
+            ssc.setAsXml(true);
+        else {
+            ssc.setAsXml(false);
+        }
+        ssc.setFieldNames(true);
+        ssc.setResponseHeaders(false);
+        ssc.setAssertionResultsFailureMessage(false);
+        ssc.setBytes(true);
+        ssc.setHostname(true);
+        ssc.setThreadCounts(true);
+        ssc.setSampleCount(true);
+        ssc.saveUrl();
+        ssc.setRequestHeaders(true);
+        ssc.setResponseHeaders(true);
+        resultCollector.setSaveConfig(ssc);
+        resultCollector.setProperty("filename", getFileName(fileFormat));
+        return resultCollector;
+    }
+
+    public void addCSVResultsCollector() {
+        ResultCollector resultCollector = getSamplesResultsCollector("csv");
+        testPlanTree.add(testPlan, resultCollector);
+    }
+
+    public void generateDashBoard() {
+        File dashboardDir = new File(getOutputDirectory() + "/dashboard-reports/");
+
+        if (dashboardDir.exists()) {
+            try {
+                FileUtils.deleteDirectory(dashboardDir);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        dashboardDir.mkdir();
+
+        JMeterUtils.setProperty(JMETER_REPORT_OUTPUT_DIR_PROPERTY, dashboardDir.getAbsolutePath());
+        JMeterUtils.setProperty("jmeter.save.saveservice.assertion_results_failure_message", "false");
+
+        logger.info("Setting property '" + JMETER_REPORT_OUTPUT_DIR_PROPERTY + "' to:'" + dashboardDir.getAbsolutePath() + "'");
+
+        try {
+/*            File csvResultsLogFile = new File(getOutputDirectory()+File.separator+this.getTestPlanFileName()+".csv");
+            if (!csvResultsLogFile.exists()){
+                try {
+                    csvResultsLogFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } */
+            JMeterUtils.setProperty("jmeter.save.saveservice.output_format", "csv");
+            ReportGenerator reportGenerator = new ReportGenerator(getOutputDirectory() + File.separator + this.getTestPlanFileName() + "-reportable.csv", null);
+
+            try {
+                reportGenerator.generate();
+            } catch (GenerationException e) {
+                e.printStackTrace();
+            }
+        } catch (ConfigurationException e) {
+            e.printStackTrace();
+        }
+        //JMeterUtils.setProperty("jmeter.save.saveservice.output_format","xml");
     }
 
     public void createJMX() {
@@ -244,7 +347,7 @@ public class JMeterRunner extends Observable {
         ssc.setSuccess(true);
         ssc.setLabel(true);
         ssc.setCode(true);
-        ssc.setMessage(false);
+        ssc.setMessage(true);
         ssc.setThreadName(true);
         ssc.setDataType(false);
         ssc.setEncoding(false);
@@ -263,7 +366,6 @@ public class JMeterRunner extends Observable {
         ssc.saveUrl();
         ssc.setRequestHeaders(true);
         ssc.setResponseHeaders(true);
-
         return ssc;
     }
 
@@ -272,6 +374,7 @@ public class JMeterRunner extends Observable {
         addTestSteps();
         addJTLResultsCollector();
         addSummaryReport();
+        addCSVResultsCollector();
         jmeter.configure(testPlanTree);
         createJMX();
         updateObserversStart();
@@ -280,6 +383,8 @@ public class JMeterRunner extends Observable {
 
         updateObserversStop();
         createReportableJtl();
+        createReportableCSV();
+        generateDashBoard();
         jmeter.exit();
     }
 
@@ -305,7 +410,7 @@ public class JMeterRunner extends Observable {
         addTestSteps();
         addJTLResultsCollector();
         addSummaryReport();
-
+        addCSVResultsCollector();
         this.addRemoteTestListener();
 
         createJMX();
@@ -334,6 +439,8 @@ public class JMeterRunner extends Observable {
 
         updateObserversStop();
         createReportableJtl(true);
+        createReportableCSV();
+        generateDashBoard();
         distributedRunner.exit(remoteHosts);
     }
 
