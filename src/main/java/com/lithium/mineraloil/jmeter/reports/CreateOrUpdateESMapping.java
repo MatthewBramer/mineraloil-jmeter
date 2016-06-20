@@ -57,10 +57,7 @@ public class CreateOrUpdateESMapping {
                 e.printStackTrace();
             }
         }
-        if (putIndexTemplateResponse != null && putIndexTemplateResponse.isAcknowledged())
-            return true;
-        else
-            return false;
+        return putIndexTemplateResponse != null && putIndexTemplateResponse.isAcknowledged();
 
     }
 

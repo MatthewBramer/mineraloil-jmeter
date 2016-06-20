@@ -29,6 +29,7 @@ public abstract class AbstractPerfTestWithLogins {
         int rampup = Integer.parseInt(System.getProperty("rampup"));
         String remoteJmeterInstance = System.getProperty("remoteJmeterHost");
         String csvFile = System.getProperty("csvFileLocation");
+        String createDashboard = System.getProperty("createDashboard","true");
      /*   String elasticSearchCluster = System.getProperty("elasticSearchClusterName");
         String elasticSearchHost = System.getProperty("elasticSearchHost");
         int elasticSearchPort = Integer.parseInt(System.getProperty("elasticSearchPort"));
