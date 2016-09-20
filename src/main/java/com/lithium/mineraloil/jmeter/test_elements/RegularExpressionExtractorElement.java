@@ -12,6 +12,7 @@ import org.apache.jmeter.testelement.TestElement;
 public class RegularExpressionExtractorElement extends JMeterStepImpl<RegularExpressionExtractorElement> {
     private String name;
     private String referenceName;
+    private String fieldToCheck;  // note for Response Headers set this to "true"
     private String regex;
     private String template;
     private String matchNumber;
@@ -24,6 +25,7 @@ public class RegularExpressionExtractorElement extends JMeterStepImpl<RegularExp
         regexExtractor.setProperty(TestElement.TEST_CLASS, RegexExtractor.class.getName().toString());
         regexExtractor.setProperty(TestElement.NAME, name);
         regexExtractor.setProperty("RegexExtractor.refname", referenceName);
+        regexExtractor.setProperty("RegexExtractor.useHeaders", fieldToCheck);
         regexExtractor.setProperty("RegexExtractor.regex", regex);
         regexExtractor.setProperty("RegexExtractor.template", template);
         regexExtractor.setProperty("RegexExtractor.match_number", matchNumber);
