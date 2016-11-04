@@ -82,13 +82,13 @@
         <dependency>
             <groupId>com.lithium.dev.common.components</groupId>
             <artifactId>common-community</artifactId>
-            <version>15.11</version>
+            <version>16.10</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.lithium.dev.analytics.components</groupId>
             <artifactId>analytics-core</artifactId>
-            <version>15.11</version>
+            <version>16.10</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-logging</artifactId>
@@ -108,13 +108,13 @@
         <dependency>
             <groupId>com.lithium.dev.analytics.components</groupId>
             <artifactId>analytics-datainv</artifactId>
-            <version>15.11</version>
+            <version>16.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.lithium.dev.common.components</groupId>
             <artifactId>common-base</artifactId>
-            <version>15.11</version>
+            <version>16.10</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -134,7 +134,7 @@
         <dependency>
             <groupId>com.lithium.dev.common.components</groupId>
             <artifactId>common-io</artifactId>
-            <version>15.11</version>
+            <version>16.10</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

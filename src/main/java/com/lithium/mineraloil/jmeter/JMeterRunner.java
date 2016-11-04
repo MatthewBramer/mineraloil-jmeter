@@ -382,7 +382,7 @@ public class JMeterRunner extends Observable {
         jmeter.run();
 
         updateObserversStop();
-        createReportableJtl();
+        createReportableJtl(true);
         createReportableCSV();
         generateDashBoard();
         jmeter.exit();
