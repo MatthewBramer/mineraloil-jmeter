@@ -85,10 +85,14 @@ public class LiaPerfTestOnlyUrls {
         jmeter.addElasticSearchMapping(elasticSearchCluster, elasticSearchHost, elasticSearchPort);
         jmeter.addElasticSearchListener(elasticSearchCluster, testRun, elasticSearchHost, elasticSearchPort);
 
+        if (remoteJmeterInstance.equalsIgnoreCase("localhost")){
+            jmeter.run();
+        }else {
         /* Now run the jmeter client which will run script on remote instance */
-        List<String> remoteHosts=Arrays.asList(remoteJmeterInstance.split(","));
+            List<String> remoteHosts = Arrays.asList(remoteJmeterInstance.split(","));
 
-        jmeter.remoteRun(remoteHosts);
+            jmeter.remoteRun(remoteHosts);
+        }
     }
 
 }

@@ -63,7 +63,7 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
                 .port(port)
                 .protocol(protocol)
                 .path("${url}")
-
+                .autoRedirects(true)
                 .method("GET")
                 .implementation("HttpClient4").headerManager(headerManager)
                 .build();
