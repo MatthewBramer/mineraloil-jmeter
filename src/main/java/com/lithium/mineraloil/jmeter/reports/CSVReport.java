@@ -28,11 +28,12 @@ public class CSVReport {
 
     String csvFileName;
     PageNameClassifier pageNameClassifier;
+
     public CSVReport(String fileName) {
         this.csvFileName = fileName;
         Config config = new lithium.util.Config();
         config.put("tapestry.context.name", "t5");
-         this.pageNameClassifier = new PageNameClassifier(config);
+        this.pageNameClassifier = new PageNameClassifier(config);
     }
 
     public void createReportableResults(String reportableFileName) {
@@ -54,9 +55,9 @@ public class CSVReport {
 
             CSVHttpSample sample;
             while ((sample = beanReader.read(CSVHttpSample.class, header, processors)) != null) {
-                String pageName=this.pageNameClassifier.classify(sample.getLabel());
+                String pageName = this.pageNameClassifier.classify(sample.getLabel());
                 sample.setLabel(pageName);
-                beanWriter.write(sample,header,processors);
+                beanWriter.write(sample, header, processors);
             }
 
         } catch (IOException e) {
@@ -70,7 +71,7 @@ public class CSVReport {
                 }
             }
 
-            if( beanWriter != null ) {
+            if (beanWriter != null) {
                 try {
                     beanWriter.close();
                 } catch (IOException e) {
@@ -80,8 +81,8 @@ public class CSVReport {
         }
     }
 
-    private static CellProcessor[] getProcessors(){
-        return new CellProcessor[] {
+    private static CellProcessor[] getProcessors() {
+        return new CellProcessor[]{
                 new ParseLong(),
                 new ParseLong(),
                 new NotNull(),
@@ -96,8 +97,10 @@ public class CSVReport {
                 new ParseInt(),
                 new ParseInt(),
                 new org.supercsv.cellprocessor.Optional(),
+                new org.supercsv.cellprocessor.Optional(),
+                new org.supercsv.cellprocessor.Optional(),
                 new ParseInt()
-                };
+        };
     }
 
 

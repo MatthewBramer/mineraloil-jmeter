@@ -406,6 +406,7 @@ public class JMeterRunner extends Observable {
 
     public void remoteRun(List<String> remoteHosts) {
 
+
         getCookieManager();
         addTestSteps();
         addJTLResultsCollector();
