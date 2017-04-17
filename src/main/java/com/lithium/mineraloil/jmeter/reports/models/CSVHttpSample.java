@@ -19,6 +19,7 @@ public class CSVHttpSample {
     public String threadName;
     public String success;
     public long bytes;
+    public long sentBytes;
     public int grpThreads;
     public int allThreads;
     public int Latency;
@@ -26,4 +27,5 @@ public class CSVHttpSample {
     public int ErrorCount;
     public String Hostname;
     public int IdleTime;
+    public int Connect;
 }
