@@ -3,6 +3,7 @@ package com.lithium.liatests;
 import com.lithium.mineraloil.jmeter.JMeterRunner;
 import com.lithium.mineraloil.jmeter.test_elements.CSVDataSetElement;
 import com.lithium.mineraloil.jmeter.test_elements.HTTPSamplerElement;
+import com.lithium.mineraloil.jmeter.test_elements.HttpCacheManagerElement;
 import com.lithium.mineraloil.jmeter.test_elements.ThreadGroupElement;
 import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
@@ -52,6 +53,8 @@ public class LiaWarmpupPerfTestOnlyUrls {
         JMeterRunner jmeter = new JMeterRunner("httpRequest-warmpup");
        // jmeter.addExtraJmeterProperties(properties);
 
+        HttpCacheManagerElement httpCacheManagerElement = HttpCacheManagerElement.builder().name("OverAllCacheMgr").build();
+
         /* Create header element */
         HeaderManager headerManager = new HeaderManager();
         Header header = new Header("User-Agent", "${useragent}");
@@ -76,7 +79,7 @@ public class LiaWarmpupPerfTestOnlyUrls {
                 delimiter("#").variableNames("url").name("allurls").quotedData(false).stopThread(true).shareMode("shareMode.all")
                 .recycle(true).build();
         threadGroup.addStep(csvDataSetElement);
-
+        threadGroup.addStep(httpCacheManagerElement);
         threadGroup.addReportableStep(login);
         jmeter.addStep(threadGroup);
 

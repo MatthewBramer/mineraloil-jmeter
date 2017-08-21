@@ -3,10 +3,12 @@ package com.lithium.liatests;
 import com.lithium.mineraloil.jmeter.JMeterRunner;
 import com.lithium.mineraloil.jmeter.test_elements.CSVDataSetElement;
 import com.lithium.mineraloil.jmeter.test_elements.HTTPSamplerElement;
+import com.lithium.mineraloil.jmeter.test_elements.HttpCacheManagerElement;
 import com.lithium.mineraloil.jmeter.test_elements.ThreadGroupElement;
 import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
 import org.junit.Test;
+import ucar.httpservices.HTTPCachingProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,6 +58,8 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
         HeaderManager headerManager = new HeaderManager();
         Header header = new Header("User-Agent", "${useragent}");
         headerManager.add(header);
+
+
 
         /* Create HttpSampler Object */
         HTTPSamplerElement login = HTTPSamplerElement.builder()

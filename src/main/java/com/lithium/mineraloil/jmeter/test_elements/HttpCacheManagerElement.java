@@ -19,6 +19,9 @@ public class HttpCacheManagerElement extends JMeterStepImpl<HttpCacheManagerElem
         CacheManager cacheManager = new CacheManager();
         cacheManager.setName(name);
         cacheManager.setUseExpires(true);
+        cacheManager.setMaxSize(10000);
+        cacheManager.setClearEachIteration(false);
+        cacheManager.setEnabled(true);
         return cacheManager;
     }
 }
