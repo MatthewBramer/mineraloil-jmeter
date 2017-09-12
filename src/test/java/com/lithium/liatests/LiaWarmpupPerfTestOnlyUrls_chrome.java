@@ -2,21 +2,19 @@ package com.lithium.liatests;
 
 import com.lithium.mineraloil.jmeter.JMeterRunner;
 import com.lithium.mineraloil.jmeter.test_elements.CSVDataSetElement;
+import com.lithium.mineraloil.jmeter.test_elements.ChromeDriverSamplerElement;
 import com.lithium.mineraloil.jmeter.test_elements.HTTPSamplerElement;
-import com.lithium.mineraloil.jmeter.test_elements.HttpCacheManagerElement;
 import com.lithium.mineraloil.jmeter.test_elements.ThreadGroupElement;
+import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
+import org.apache.jmeter.protocol.http.util.HTTPArgument;
 import org.junit.Test;
-import ucar.httpservices.HTTPCachingProvider;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by viren.thakkar on 12/23/15.
  */
-public class LiaWarmpupPerfTestOnlyUrls_local {
+public class LiaWarmpupPerfTestOnlyUrls_chrome {
 
     @Test
     public void runTest(){
@@ -31,9 +29,6 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
         int rampup = Integer.parseInt(System.getProperty("rampup"));
         String remoteJmeterInstance = System.getProperty("remoteJmeterHost");
         String csvFile = System.getProperty("csvFileLocation");
-        String dynaTrace = System.getProperty("dynatrace.enabled","false");
-        String dynaTrace_testrun_id = System.getProperty("dynatrace.testrun_id","1");
-
      /*   String elasticSearchCluster = System.getProperty("elasticSearchClusterName");
         String elasticSearchHost = System.getProperty("elasticSearchHost");
         int elasticSearchPort = Integer.parseInt(System.getProperty("elasticSearchPort"));
@@ -62,25 +57,13 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
         Header header = new Header("User-Agent", "${useragent}");
         headerManager.add(header);
 
+        Arguments arguments = new Arguments();
+        arguments.addArgument("selenium_server_url","http://localhost:4444/wd/hub");
+        arguments.addArgument("protocol",protocol);
+        arguments.addArgument("base_url",domain);
+        arguments.addArgument("url","${url}");
 
-
-
-        /* Create HttpSampler Object */
-        HTTPSamplerElement login = HTTPSamplerElement.builder()
-                .domain(domain)
-                .port(port)
-                .protocol(protocol)
-                .path("${url}")
-                .autoRedirects(true)
-                .method("GET")
-                .implementation("HttpClient4").headerManager(headerManager)
-                .build();
-
-        if (dynaTrace.equalsIgnoreCase("true") ) {
-            Header dynatraceHeader = new Header("X-dynaTrace","NA=" +login.getTestElement().getName()+";TR="+dynaTrace_testrun_id+";RC=200");
-            headerManager.add(dynatraceHeader);
-        }
-
+        ChromeDriverSamplerElement getRequests = ChromeDriverSamplerElement.builder().build();
         ThreadGroupElement threadGroup = ThreadGroupElement.builder().threadCount(threads).rampUp(rampup)
                 .continueForever(true).setScheduler(true).duration(Integer.parseInt(System.getProperty("duration", "10")))
                 .name("Show Active Users Test").build();
@@ -90,7 +73,7 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
                 .recycle(true).build();
         threadGroup.addStep(csvDataSetElement);
 
-        threadGroup.addReportableStep(login);
+        threadGroup.addReportableStep(getRequests);
         jmeter.addStep(threadGroup);
 
        // jmeter.addElasticSearchMapping(elasticSearchCluster, elasticSearchHost, elasticSearchPort);
@@ -99,6 +82,6 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
         /* Now run the jmeter client which will run script on remote instance */
        // List<String> remoteHosts= Arrays.asList(remoteJmeterInstance.split(","));
 
-        jmeter.run();
+        jmeter.runForChrome();
     }
 }

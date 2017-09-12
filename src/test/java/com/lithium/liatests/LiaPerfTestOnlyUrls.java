@@ -6,6 +6,7 @@ import com.lithium.mineraloil.jmeter.test_elements.HTTPSamplerElement;
 import com.lithium.mineraloil.jmeter.test_elements.ThreadGroupElement;
 import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
+import org.apache.jmeter.threads.JMeterContextService;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -93,6 +94,8 @@ public class LiaPerfTestOnlyUrls {
 
             jmeter.remoteRun(remoteHosts);
         }
+
+        
     }
 
 }

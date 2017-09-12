@@ -388,6 +388,25 @@ public class JMeterRunner extends Observable {
         jmeter.exit();
     }
 
+    public void runForChrome() {
+        getCookieManager();
+        addTestSteps();
+        addJTLResultsCollector();
+        addSummaryReport();
+        addCSVResultsCollector();
+        jmeter.configure(testPlanTree);
+        createJMX();
+        updateObserversStart();
+
+        jmeter.run();
+
+        updateObserversStop();
+        //createReportableJtl(true);
+        createReportableCSV();
+        generateDashBoard();
+        jmeter.exit();
+    }
+
     private void updateObserversStart() {
         setChanged();
         JMeterUpdate update = new JMeterUpdate();
