@@ -9,8 +9,6 @@ import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -18,7 +16,7 @@ import java.util.Properties;
  */
 
 
-public class LiaPerfTestOnlyUrls_local {
+public class LiaPerfTestOnlyUrls_chrome {
 
     @Test
     public void runTest(){
@@ -40,8 +38,6 @@ public class LiaPerfTestOnlyUrls_local {
         String release = System.getProperty("release");
         String revision = System.getProperty("revision");
         String community = System.getProperty("community");
-        String dynaTrace = System.getProperty("dynatrace.enabled","false");
-        String dynaTrace_testrun_id = System.getProperty("dynatrace.testrun_id","1");
 
         /*
           This is to pass extra parameters (JmeterProperties) to jmeter.
@@ -75,10 +71,6 @@ public class LiaPerfTestOnlyUrls_local {
                 .method("GET")
                 .implementation("HttpClient4").headerManager(headerManager)
                 .build();
-        if (dynaTrace.equalsIgnoreCase("true") ) {
-            Header dynatraceHeader = new Header("X-dynaTrace","NA=" +login.getTestElement().getName()+";TR="+dynaTrace_testrun_id+";RC=200");
-            headerManager.add(dynatraceHeader);
-        }
 
         ThreadGroupElement threadGroup = ThreadGroupElement.builder().threadCount(threads).rampUp(rampup)
                 .continueForever(true).setScheduler(true).duration(Integer.parseInt(System.getProperty("duration", "10")))
