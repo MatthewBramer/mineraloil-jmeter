@@ -1,10 +1,8 @@
 package com.lithium.liatests;
 
 import com.lithium.mineraloil.jmeter.JMeterRunner;
-import com.lithium.mineraloil.jmeter.test_elements.CSVDataSetElement;
-import com.lithium.mineraloil.jmeter.test_elements.HTTPSamplerElement;
-import com.lithium.mineraloil.jmeter.test_elements.HttpCacheManagerElement;
-import com.lithium.mineraloil.jmeter.test_elements.ThreadGroupElement;
+import com.lithium.mineraloil.jmeter.test_elements.*;
+import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
 import org.junit.Test;
@@ -59,10 +57,19 @@ public class LiaPerfTestOnlyUrls_chrome {
         Header header = new Header("User-Agent", "${useragent}");
         headerManager.add(header);
 
+        Arguments arguments = new Arguments();
+        arguments.addArgument("selenium_server_url","http://localhost:4444/wd/hub");
+        arguments.addArgument("protocol",protocol);
+        arguments.addArgument("base_url",domain);
+        arguments.addArgument("url","${url}");
+/*
+    New custom chrome driver sampler based on selenium tests created.
+ */
+        ChromeDriverSamplerElement getRequests = ChromeDriverSamplerElement.builder().build();
         HttpCacheManagerElement httpCacheManagerElement = HttpCacheManagerElement.builder().name("OverallCacheMgr").build();
 
         /* Create HttpSampler Object */
-        HTTPSamplerElement login = HTTPSamplerElement.builder()
+       /* HTTPSamplerElement login = HTTPSamplerElement.builder()
                 .domain(domain)
                 .port(port)
                 .protocol(protocol)
@@ -70,7 +77,7 @@ public class LiaPerfTestOnlyUrls_chrome {
                 .autoRedirects(true)
                 .method("GET")
                 .implementation("HttpClient4").headerManager(headerManager)
-                .build();
+                .build(); */
 
         ThreadGroupElement threadGroup = ThreadGroupElement.builder().threadCount(threads).rampUp(rampup)
                 .continueForever(true).setScheduler(true).duration(Integer.parseInt(System.getProperty("duration", "10")))
@@ -81,7 +88,7 @@ public class LiaPerfTestOnlyUrls_chrome {
                 .recycle(true).build();
         threadGroup.addStep(csvDataSetElement);
         threadGroup.addStep(httpCacheManagerElement);
-        threadGroup.addReportableStep(login);
+        threadGroup.addReportableStep(getRequests);
         jmeter.addStep(threadGroup);
 
         jmeter.addElasticSearchMapping(elasticSearchCluster, elasticSearchHost, elasticSearchPort);

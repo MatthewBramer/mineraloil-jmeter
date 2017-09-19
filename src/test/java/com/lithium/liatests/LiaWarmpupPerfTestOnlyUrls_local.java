@@ -34,6 +34,10 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
         String dynaTrace = System.getProperty("dynatrace.enabled","false");
         String dynaTrace_testrun_id = System.getProperty("dynatrace.testrun_id","1");
 
+        String appdynamics = System.getProperty("appdynamics.enabled","false");
+
+
+
      /*   String elasticSearchCluster = System.getProperty("elasticSearchClusterName");
         String elasticSearchHost = System.getProperty("elasticSearchHost");
         int elasticSearchPort = Integer.parseInt(System.getProperty("elasticSearchPort"));
@@ -80,6 +84,15 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
             Header dynatraceHeader = new Header("X-dynaTrace","NA=" +login.getTestElement().getName()+";TR="+dynaTrace_testrun_id+";RC=200");
             headerManager.add(dynatraceHeader);
         }
+
+
+        if (appdynamics.equalsIgnoreCase("true") ) {
+            Header appDHeader = new Header("AppD_Header",login.getTestElement().getName());
+            Header appDThreadName = new Header("AppD_ThreadName","${_BeanShell(ctx.getThread().getThreadName())}");
+            headerManager.add(appDHeader);
+            headerManager.add(appDThreadName);
+        }
+
 
         ThreadGroupElement threadGroup = ThreadGroupElement.builder().threadCount(threads).rampUp(rampup)
                 .continueForever(true).setScheduler(true).duration(Integer.parseInt(System.getProperty("duration", "10")))
