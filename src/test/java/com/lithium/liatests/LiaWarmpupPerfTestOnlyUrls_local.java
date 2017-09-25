@@ -1,10 +1,8 @@
 package com.lithium.liatests;
 
 import com.lithium.mineraloil.jmeter.JMeterRunner;
-import com.lithium.mineraloil.jmeter.test_elements.CSVDataSetElement;
-import com.lithium.mineraloil.jmeter.test_elements.HTTPSamplerElement;
-import com.lithium.mineraloil.jmeter.test_elements.HttpCacheManagerElement;
-import com.lithium.mineraloil.jmeter.test_elements.ThreadGroupElement;
+import com.lithium.mineraloil.jmeter.test_elements.*;
+import org.apache.jmeter.protocol.http.control.CookieManager;
 import org.apache.jmeter.protocol.http.control.Header;
 import org.apache.jmeter.protocol.http.control.HeaderManager;
 import org.junit.Test;
@@ -66,7 +64,14 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
         Header header = new Header("User-Agent", "${useragent}");
         headerManager.add(header);
 
+        HttpCookieManagerElement httpCookieManagerElement = HttpCookieManagerElement.builder().name("httpCookieManager_global").build();
+        httpCookieManagerElement.getTestElement().setImplementation(CookieManager.DEFAULT_IMPLEMENTATION);
+        httpCookieManagerElement.getTestElement().setProperty("CookieManager.check.cookies",false);
+        jmeter.cookieManager=httpCookieManagerElement.getTestElement();
+        jmeter.getTestPlan().setProperty("CookieManager.check.cookies",false);
 
+        HttpCacheManagerElement httpCacheManagerElement = HttpCacheManagerElement.builder().name("httpCacheManager_global").build();
+        httpCacheManagerElement.getTestElement().setUseExpires(true);
 
 
         /* Create HttpSampler Object */
@@ -101,6 +106,8 @@ public class LiaWarmpupPerfTestOnlyUrls_local {
                 fileName(csvFile).
                 delimiter("#").variableNames("url").name("allurls").quotedData(false).stopThread(true).shareMode("shareMode.all")
                 .recycle(true).build();
+        threadGroup.addStep(httpCacheManagerElement);
+        threadGroup.addStep(httpCookieManagerElement);
         threadGroup.addStep(csvDataSetElement);
 
         threadGroup.addReportableStep(login);
