@@ -3,7 +3,7 @@ package com.lithium.mineraloil.jmeter.test_elements;
 import com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.JSONPathExtractor;
 import com.atlantbh.jmeter.plugins.jsonutils.jsonpathextractor.gui.JSONPathExtractorGui;
 import com.google.common.base.Preconditions;
-import lombok.experimental.Builder;
+import lombok.Builder;
 import org.apache.jmeter.testelement.TestElement;
 
 @Builder

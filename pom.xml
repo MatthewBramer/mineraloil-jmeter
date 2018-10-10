@@ -2,12 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.lithium</groupId>
-        <artifactId>lithium-oss-superpom</artifactId>
-        <version>0.9</version>
-    </parent>
-    
     <groupId>com.lithium.mineraloil</groupId>
     <artifactId>mineraloil-jmeter</artifactId>
     <name>mineraloil-jmeter</name>
@@ -33,6 +27,15 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jmeter.version>5.0</jmeter.version>
+        <jmeter.plugins.version>1.4.0</jmeter.plugins.version>
+        <lombok.version>1.18.2</lombok.version>
+        <jackson.version>2.9.7</jackson.version>
+        <joda.version>2.10</joda.version>
+        <logback.version>1.2.3</logback.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <jax2b.version>0.12.3</jax2b.version>
+        <guava.version>26.0-jre</guava.version>
     </properties>
 
     <build>
@@ -63,27 +66,27 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>17.0</version>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
             <groupId>org.jvnet.jaxb2.maven2</groupId>
             <artifactId>maven-jaxb2-plugin</artifactId>
-            <version>0.12.3</version>
+            <version>${jax2b.version}</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.7</version>
+            <version>${slf4j.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.2</version>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.1.2</version>
+            <version>${logback.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -93,17 +96,17 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.12.4</version>
+            <version>${lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.jmeter</groupId>
             <artifactId>ApacheJMeter_core</artifactId>
-            <version>2.11</version>
+            <version>${jmeter.version}</version>
             <exclusions>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpcore</artifactId>
-                </exclusion>
+                <!--<exclusion>-->
+                    <!--<groupId>org.apache.httpcomponents</groupId>-->
+                    <!--<artifactId>httpcore</artifactId>-->
+                <!--</exclusion>-->
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
                     <artifactId>httpmime</artifactId>
@@ -125,7 +128,7 @@
         <dependency>
             <groupId>org.apache.jmeter</groupId>
             <artifactId>ApacheJMeter</artifactId>
-            <version>2.11</version>
+            <version>${jmeter.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -152,7 +155,7 @@
         <dependency>
             <groupId>org.apache.jmeter</groupId>
             <artifactId>ApacheJMeter_config</artifactId>
-            <version>2.11</version>
+            <version>${jmeter.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -179,7 +182,7 @@
         <dependency>
             <groupId>org.apache.jmeter</groupId>
             <artifactId>ApacheJMeter_http</artifactId>
-            <version>2.11</version>
+            <version>${jmeter.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -206,7 +209,7 @@
         <dependency>
             <groupId>org.apache.jmeter</groupId>
             <artifactId>jorphan</artifactId>
-            <version>2.11</version>
+            <version>${jmeter.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.httpcomponents</groupId>
@@ -233,7 +236,7 @@
         <dependency>
             <groupId>kg.apc</groupId>
             <artifactId>jmeter-plugins-extras-libs</artifactId>
-            <version>1.2.1</version>
+            <version>${jmeter.plugins.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>log4j</groupId>
@@ -252,12 +255,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.4.2</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.3</version>
+            <version>${joda.version}</version>
         </dependency>
 
     </dependencies>

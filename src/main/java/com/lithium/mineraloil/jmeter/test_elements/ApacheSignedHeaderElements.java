@@ -3,7 +3,7 @@ package com.lithium.mineraloil.jmeter.test_elements;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
-import lombok.experimental.Builder;
+import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.jmeter.protocol.http.control.Header;

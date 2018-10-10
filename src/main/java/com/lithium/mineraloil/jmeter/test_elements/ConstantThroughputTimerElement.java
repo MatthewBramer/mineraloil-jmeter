@@ -1,7 +1,7 @@
 package com.lithium.mineraloil.jmeter.test_elements;
 
 import lombok.Getter;
-import lombok.experimental.Builder;
+import lombok.Builder;
 import org.apache.jmeter.testbeans.gui.TestBeanGUI;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.timers.ConstantThroughputTimer;

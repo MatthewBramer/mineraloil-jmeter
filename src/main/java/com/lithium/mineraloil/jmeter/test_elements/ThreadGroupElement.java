@@ -1,7 +1,7 @@
 package com.lithium.mineraloil.jmeter.test_elements;
 
 import com.google.common.base.Preconditions;
-import lombok.experimental.Builder;
+import lombok.Builder;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.threads.ThreadGroup;
 import org.apache.jmeter.threads.gui.ThreadGroupGui;

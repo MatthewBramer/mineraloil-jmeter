@@ -1,7 +1,7 @@
 package com.lithium.mineraloil.jmeter.test_elements;
 
 import com.google.common.base.Preconditions;
-import lombok.experimental.Builder;
+import lombok.Builder;
 import org.apache.jmeter.config.CSVDataSet;
 import org.apache.jmeter.testbeans.gui.TestBeanGUI;
 import org.apache.jmeter.testelement.TestElement;
