@@ -149,6 +149,10 @@ public class JMeterRunner extends Observable {
         testPlanTree.add(testPlan, collector);
     }
 
+    private void addDashboardReport() {
+        testPlanTree.add(testPlan, dashboardReportConfiguration());
+    }
+
     // user the isReportable flag to generate a second jtl
     // that only has a subset of the test results
     private void createReportableJtl() {
@@ -246,6 +250,7 @@ public class JMeterRunner extends Observable {
         addTestSteps();
         addJTLResultsCollector();
         addSummaryReport();
+        addDashboardReport();
         jmeter.configure(testPlanTree);
         createJMX();
         updateObserversStart();
@@ -278,6 +283,31 @@ public class JMeterRunner extends Observable {
         update.setTestPlanName(testPlanName);
         update.setState(JMeterStatus.STOPPED);
         notifyObservers(update);
+    }
+
+    private ResultCollector dashboardReportConfiguration() {
+        ResultCollector dashboardCollector = new ResultCollector();
+        dashboardCollector.setProperty(TestElement.GUI_CLASS, "org.apache.jmeter.visualizers.ViewResultsFullVisualizer");
+        dashboardCollector.setProperty(TestElement.TEST_CLASS, "org.apache.jmeter.reporters.ResultCollector");
+        dashboardCollector.setProperty(TestElement.NAME, "View Results Tree");
+        dashboardCollector.setProperty(TestElement.ENABLED, true);
+        dashboardCollector.setProperty("ResultCollector.error_logging", false);
+        SampleSaveConfiguration sampleSaveConfiguration = new SampleSaveConfiguration();
+        sampleSaveConfiguration.setAsXml(false);
+        sampleSaveConfiguration.setFieldNames(false);
+        sampleSaveConfiguration.setResponseData(true);
+        sampleSaveConfiguration.setResponseHeaders(true);
+        sampleSaveConfiguration.setFileName(true);
+        sampleSaveConfiguration.setSampleCount(true);
+        sampleSaveConfiguration.setEncoding(true);
+        sampleSaveConfiguration.setRequestHeaders(true);
+        sampleSaveConfiguration.setMessage(true);
+        sampleSaveConfiguration.setSamplerData(true);
+        sampleSaveConfiguration.setHostname(true);
+        sampleSaveConfiguration.setFieldNames(true);
+        dashboardCollector.setSaveConfig(sampleSaveConfiguration);
+        dashboardCollector.setProperty("filename", getFileName("csv"));
+        return dashboardCollector;
     }
 
 }
