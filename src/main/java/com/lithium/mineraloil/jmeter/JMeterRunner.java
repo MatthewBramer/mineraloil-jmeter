@@ -1,5 +1,6 @@
 package com.lithium.mineraloil.jmeter;
 
+import com.lithium.mineraloil.jmeter.reports.DashboardReport;
 import com.lithium.mineraloil.jmeter.reports.JTLReport;
 import com.lithium.mineraloil.jmeter.reports.SummaryReport;
 import com.lithium.mineraloil.jmeter.test_elements.JMeterStep;
@@ -164,6 +165,10 @@ public class JMeterRunner extends Observable {
         return summaryResults;
     }
 
+    public void createDashboardReport() {
+        new DashboardReport(getFileName("csv"));
+    }
+
     public void createJMX() {
         try {
             SaveService.saveTree(testPlanTree, new FileOutputStream(getFileName("jmx")));
@@ -257,6 +262,7 @@ public class JMeterRunner extends Observable {
         jmeter.run();
         updateObserversStop();
         createReportableJtl();
+        createDashboardReport();
         jmeter.exit();
         return this;
     }
@@ -285,6 +291,7 @@ public class JMeterRunner extends Observable {
         notifyObservers(update);
     }
 
+    // Configuration for generating html reports
     private ResultCollector dashboardReportConfiguration() {
         ResultCollector dashboardCollector = new ResultCollector();
         dashboardCollector.setProperty(TestElement.GUI_CLASS, "org.apache.jmeter.visualizers.ViewResultsFullVisualizer");
@@ -297,16 +304,17 @@ public class JMeterRunner extends Observable {
         sampleSaveConfiguration.setFieldNames(false);
         sampleSaveConfiguration.setResponseData(true);
         sampleSaveConfiguration.setResponseHeaders(true);
-        sampleSaveConfiguration.setFileName(true);
-        sampleSaveConfiguration.setSampleCount(true);
-        sampleSaveConfiguration.setEncoding(true);
+        sampleSaveConfiguration.setFileName(false);
+        sampleSaveConfiguration.setSampleCount(false);
+        sampleSaveConfiguration.setEncoding(false);
         sampleSaveConfiguration.setRequestHeaders(true);
         sampleSaveConfiguration.setMessage(true);
         sampleSaveConfiguration.setSamplerData(true);
-        sampleSaveConfiguration.setHostname(true);
+        sampleSaveConfiguration.setHostname(false);
         sampleSaveConfiguration.setFieldNames(true);
+        sampleSaveConfiguration.setUrl(false);
         dashboardCollector.setSaveConfig(sampleSaveConfiguration);
-        dashboardCollector.setProperty("filename", getFileName("csv"));
+        dashboardCollector.setFilename(getFileName("csv"));
         return dashboardCollector;
     }
 
